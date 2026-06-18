@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand colors -->
+    <color name="primary">#FF6B35</color>          <!-- oranye hangat -->
+    <color name="primary_dark">#E55A25</color>
+    <color name="accent">#4CAF50</color>            <!-- hijau segar -->
+
+    <!-- Background -->
+    <color name="background">#FFF8F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#FFF0E8</color>
+
+    <!-- Text -->
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_surface">#1C1B1F</color>
+    <color name="on_surface_variant">#49454F</color>
+    <color name="hint">#9E9E9E</color>
+
+    <!-- Semantic -->
+    <color name="income">#43A047</color>            <!-- hijau = pendapatan -->
+    <color name="expense">#E53935</color>           <!-- merah = pengeluaran -->
+    <color name="warning">#FB8C00</color>           <!-- oranye = stok rendah -->
+
+    <!-- Cards gradient start/end -->
+    <color name="card_blue_start">#1E88E5</color>
+
+    <!-- Bottom nav -->
+    <color name="nav_selected">#FF6B35</color>
+    <color name="nav_unselected">#9E9E9E</color>
+</resources>

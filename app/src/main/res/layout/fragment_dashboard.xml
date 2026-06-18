@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_header_gradient"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selamat Datang 👋"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:alpha="0.85"/>
+
+            <TextView
+                android:layout_width="202dp"
+                android:layout_height="36dp"
+                android:text="UMKMudah"
+                android:textColor="#FFFFFF"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kelola bisnis UMKM kamu dengan mudah"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:alpha="0.8"/>
+        </LinearLayout>
+
+        <!-- Section: Keuangan -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💰 Ringkasan Keuangan"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/on_surface"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Row 1: Pendapatan + Pengeluaran -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <!-- Kartu Pendapatan -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_green"
+                android:padding="14dp"
+                android:layout_marginEnd="6dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Pendapatan" android:textColor="#FFFFFF" android:textSize="12sp" android:alpha="0.85"/>
+                <TextView android:id="@+id/txt_pendapatan"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Rp 0" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Kartu Pengeluaran -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_orange"
+                android:padding="14dp"
+                android:layout_marginStart="6dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Pengeluaran" android:textColor="#FFFFFF" android:textSize="12sp" android:alpha="0.85"/>
+                <TextView android:id="@+id/txt_pengeluaran"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Rp 0" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Kartu Laba Bersih (full width) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_blue"
+            android:padding="16dp"
+            android:layout_marginBottom="18dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="✨ Laba Bersih" android:textColor="#FFFFFF" android:textSize="13sp" android:alpha="0.9"/>
+            <TextView android:id="@+id/txt_laba"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Rp 0" android:textColor="#FFFFFF" android:textSize="24sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Section: Statistik -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📊 Statistik Toko"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/on_surface"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Pelanggan -->
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:background="@drawable/bg_card_stat"
+                android:padding="14dp" android:layout_marginEnd="4dp"
+                android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="👥" android:textSize="22sp"/>
+                <TextView android:id="@+id/txt_pelanggan"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0" android:textSize="20sp" android:textStyle="bold"
+                    android:textColor="@color/primary"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Pelanggan" android:textSize="11sp" android:textColor="@color/hint"/>
+            </LinearLayout>
+
+            <!-- Produk -->
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:background="@drawable/bg_card_stat"
+                android:padding="14dp" android:layout_marginEnd="4dp" android:layout_marginStart="4dp"
+                android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="📦" android:textSize="22sp"/>
+                <TextView android:id="@+id/txt_produk"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0" android:textSize="20sp" android:textStyle="bold"
+                    android:textColor="@color/accent"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Produk" android:textSize="11sp" android:textColor="@color/hint"/>
+            </LinearLayout>
+
+            <!-- Stok Rendah -->
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical"
+                android:background="@drawable/bg_card_stat"
+                android:padding="14dp" android:layout_marginStart="4dp"
+                android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="⚠️" android:textSize="22sp"/>
+                <TextView android:id="@+id/txt_stok_rendah"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="0" android:textSize="20sp" android:textStyle="bold"
+                    android:textColor="@color/warning"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Stok Rendah" android:textSize="11sp" android:textColor="@color/hint"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Footer info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Powered by C NDK · UMKMudah v1.0"
+            android:textSize="11sp"
+            android:textColor="@color/hint"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+</ScrollView>
