@@ -86,7 +86,16 @@ static int next_id() {
 static void tanggal_sekarang(char *buf, int buf_size) {
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
-    strftime(buf, buf_size, "%Y-%m-%d", tm_info);
+    if (tm_info == NULL || strftime(buf, buf_size, "%Y-%m-%d", tm_info) == 0) {
+        snprintf(buf, buf_size, "1970-01-01");
+    }
+}
+
+static void copy_string(char *dest, size_t dest_size, const char *src) {
+    if (dest_size == 0) return;
+    if (src == NULL) src = "";
+    strncpy(dest, src, dest_size - 1);
+    dest[dest_size - 1] = '\0';
 }
 
 /* ============================================================
@@ -103,17 +112,27 @@ Java_com_umkmudah_NativeLib_tambahPelanggan(
         return -1;
     }
 
+    if (j_nama == NULL || j_telepon == NULL || j_alamat == NULL) {
+        return -1;
+    }
+
     const char *nama    = (*env)->GetStringUTFChars(env, j_nama, NULL);
     const char *telepon = (*env)->GetStringUTFChars(env, j_telepon, NULL);
     const char *alamat  = (*env)->GetStringUTFChars(env, j_alamat, NULL);
+    if (nama == NULL || telepon == NULL || alamat == NULL) {
+        if (nama) (*env)->ReleaseStringUTFChars(env, j_nama, nama);
+        if (telepon) (*env)->ReleaseStringUTFChars(env, j_telepon, telepon);
+        if (alamat) (*env)->ReleaseStringUTFChars(env, j_alamat, alamat);
+        return -1;
+    }
 
     Pelanggan *p = &g_pelanggan[g_jumlah_pelanggan];
     p->id                 = next_id();
     p->total_belanja      = 0.0;
     p->jumlah_transaksi   = 0;
-    strncpy(p->nama,    nama,    MAX_STR - 1);
-    strncpy(p->telepon, telepon, 31);
-    strncpy(p->alamat,  alamat,  MAX_STR - 1);
+    copy_string(p->nama,    sizeof(p->nama),    nama);
+    copy_string(p->telepon, sizeof(p->telepon), telepon);
+    copy_string(p->alamat,  sizeof(p->alamat),  alamat);
     tanggal_sekarang(p->bergabung, sizeof(p->bergabung));
 
     g_jumlah_pelanggan++;
@@ -188,9 +207,19 @@ Java_com_umkmudah_NativeLib_tambahBarang(
         return -1;
     }
 
+    if (j_nama == NULL || j_kategori == NULL || j_satuan == NULL || stok < 0 || stok_min < 0 || harga_beli < 0 || harga_jual < 0) {
+        return -1;
+    }
+
     const char *nama     = (*env)->GetStringUTFChars(env, j_nama,     NULL);
     const char *kategori = (*env)->GetStringUTFChars(env, j_kategori, NULL);
     const char *satuan   = (*env)->GetStringUTFChars(env, j_satuan,   NULL);
+    if (nama == NULL || kategori == NULL || satuan == NULL) {
+        if (nama) (*env)->ReleaseStringUTFChars(env, j_nama, nama);
+        if (kategori) (*env)->ReleaseStringUTFChars(env, j_kategori, kategori);
+        if (satuan) (*env)->ReleaseStringUTFChars(env, j_satuan, satuan);
+        return -1;
+    }
 
     Barang *b = &g_barang[g_jumlah_barang];
     b->id           = next_id();
@@ -198,9 +227,9 @@ Java_com_umkmudah_NativeLib_tambahBarang(
     b->harga_jual   = (double)harga_jual;
     b->stok         = (int)stok;
     b->stok_minimum = (int)stok_min;
-    strncpy(b->nama,     nama,     MAX_STR - 1);
-    strncpy(b->kategori, kategori, 63);
-    strncpy(b->satuan,   satuan,   31);
+    copy_string(b->nama,     sizeof(b->nama),     nama);
+    copy_string(b->kategori, sizeof(b->kategori), kategori);
+    copy_string(b->satuan,   sizeof(b->satuan),   satuan);
 
     g_jumlah_barang++;
 
@@ -277,7 +306,18 @@ Java_com_umkmudah_NativeLib_catatTransaksi(
         return -1;
     }
 
+    if (jumlah <= 0 || j_jenis == NULL) {
+        return -1;
+    }
+
     const char *jenis = (*env)->GetStringUTFChars(env, j_jenis, NULL);
+    if (jenis == NULL) {
+        return -1;
+    }
+    if (strcmp(jenis, "keluar") != 0 && strcmp(jenis, "masuk") != 0) {
+        (*env)->ReleaseStringUTFChars(env, j_jenis, jenis);
+        return -3;
+    }
 
     /* Cari barang */
     Barang *b = NULL;
@@ -292,7 +332,12 @@ Java_com_umkmudah_NativeLib_catatTransaksi(
         return -2;
     }
 
-    double subtotal = b->harga_jual * (double)jumlah;
+    if (strcmp(jenis, "keluar") == 0 && b->stok < (int)jumlah) {
+        (*env)->ReleaseStringUTFChars(env, j_jenis, jenis);
+        return -4;
+    }
+
+    double subtotal = (strcmp(jenis, "keluar") == 0 ? b->harga_jual : b->harga_beli) * (double)jumlah;
 
     Transaksi *t = &g_transaksi[g_jumlah_transaksi];
     t->id            = next_id();
@@ -300,7 +345,7 @@ Java_com_umkmudah_NativeLib_catatTransaksi(
     t->barang_id     = (int)barang_id;
     t->jumlah        = (int)jumlah;
     t->subtotal      = subtotal;
-    strncpy(t->jenis, jenis, 15);
+    copy_string(t->jenis, sizeof(t->jenis), jenis);
     tanggal_sekarang(t->tanggal, sizeof(t->tanggal));
 
     /* Update stok otomatis jika "keluar" (penjualan) */
@@ -391,13 +436,13 @@ Java_com_umkmudah_NativeLib_getRiwayatTransaksi(JNIEnv *env, jobject obj) {
         char nama_pelanggan[MAX_STR] = "Umum";
         for (int j = 0; j < g_jumlah_barang; j++) {
             if (g_barang[j].id == t->barang_id) {
-                strncpy(nama_barang, g_barang[j].nama, MAX_STR - 1);
+                copy_string(nama_barang, sizeof(nama_barang), g_barang[j].nama);
                 break;
             }
         }
         for (int j = 0; j < g_jumlah_pelanggan; j++) {
             if (g_pelanggan[j].id == t->pelanggan_id) {
-                strncpy(nama_pelanggan, g_pelanggan[j].nama, MAX_STR - 1);
+                copy_string(nama_pelanggan, sizeof(nama_pelanggan), g_pelanggan[j].nama);
                 break;
             }
         }
@@ -437,6 +482,10 @@ Java_com_umkmudah_NativeLib_resetData(JNIEnv *env, jobject obj) {
 /* Seed data demo */
 JNIEXPORT void JNICALL
 Java_com_umkmudah_NativeLib_seedDemoData(JNIEnv *env, jobject obj) {
+    if (g_jumlah_pelanggan > 0 || g_jumlah_barang > 0 || g_jumlah_transaksi > 0) {
+        return;
+    }
+
     /* Pelanggan demo */
     jstring nama1 = (*env)->NewStringUTF(env, "Budi Santoso");
     jstring tlp1  = (*env)->NewStringUTF(env, "08123456789");
